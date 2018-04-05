@@ -9,8 +9,8 @@
 #import "HGWaterWaveDisplayLink.h"
 
 /**
- 一个间接的 代理 Class, 为了解决 定时器引来的指针循环问题,这仅仅是其中的一种解决方案.
- 更多更优秀的解决方案,可以参考这里:https://www.jianshu.com/p/f775b008532a
+ 一个间接的 代理 Class, 为了解决 定时器引来的指针循环问题,这仅仅是其中的一种解决方案,这种方案略显别扭
+ 更多更详细的解决方案,可以参考这里:https://www.jianshu.com/p/f775b008532a
  */
 @interface _pHGProxy : NSProxy
 
@@ -70,7 +70,7 @@
  */
 + (instancetype)wwDisplayLinkWithShapeLayer:(CAShapeLayer *)shapeLayer {
     // 创建对象
-    HGWaterWaveDisplayLink* wwDisplayLink = [[HGWaterWaveDisplayLink alloc] init];
+    HGWaterWaveDisplayLink* wwDisplayLink = [[self alloc] init];
     // 赋值
     wwDisplayLink->_shapeLayer = shapeLayer;
     // 返回
@@ -109,15 +109,15 @@
     if (_waveOffset >= width) {
         _waveOffset = 0;
     }
-    
+    // 曲线
     UIBezierPath* bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint:CGPointMake(0, 0)];
-    
+    // 波的高度与宽度
     CGFloat waveHeight = 5;
     CGFloat waveWidth = width/3.0;
     
     CGFloat idx = 0;
-    
+    // 当前 layer 的高度
     CGFloat height = CGRectGetHeight(_shapeLayer.frame);
     for (NSInteger x=0; x<width; x++) {
         
@@ -144,6 +144,5 @@
     [_displayLink invalidate];
     _displayLink = nil;
 }
-
 
 @end

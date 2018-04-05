@@ -70,9 +70,9 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
     // 父类方法
     self = [super initWithFrame:frame];
     // 默认为白色
-    self.contentColor = [UIColor whiteColor];
+    self.contentColor = [UIColor greenColor];
     // 水柱默认 红色
-    self.fillWaterColor = [UIColor redColor];
+    self.fillWaterColor = [UIColor purpleColor];
     // 设置所有的子 Layer
     [self setupAllSubLayer];
     // 默认正在录音
