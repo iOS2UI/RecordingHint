@@ -7,6 +7,7 @@
 //
 
 #import "HGRecordingHintView.h"
+#import "HGWaterWaveDisplayLink.h"
 
 // RGB颜色
 #define HGColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:a]
@@ -41,9 +42,23 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
 // 显示的颜色 默认白色
 @property (nonatomic, strong) UIColor* contentColor;
 
+// 水波定时器 & 绘制 path
+@property (nonatomic, strong) HGWaterWaveDisplayLink* wwDisplayLink;
+
 @end
 
 @implementation HGRecordingHintView
+
+#pragma mark -
+#pragma mark - 懒加载
+- (HGWaterWaveDisplayLink *)wwDisplayLink {
+    if (!_wwDisplayLink) {
+        
+        _wwDisplayLink = [HGWaterWaveDisplayLink wwDisplayLinkWithShapeLayer:self.volumeBorderFillLayer];
+        
+    }
+    return _wwDisplayLink;
+}
 
 #pragma mark -
 #pragma mark - 构造方法
@@ -54,7 +69,6 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
     
     // 父类方法
     self = [super initWithFrame:frame];
-    
     // 默认为白色
     self.contentColor = [UIColor whiteColor];
     // 水柱默认 红色
@@ -150,6 +164,10 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
         return;
     }
     
+    // 让 volume 的值在 [0.05, 1.0] 区间
+    volume = MAX(0.05, volume);
+    volume = MIN(1.0, volume);
+    
     // 正常赋值
     _volume = volume;
     
@@ -159,6 +177,9 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
 
 // 音量的强度
 - (void)volumeMask {
+    // 在这个地方 ,不要使用 self.wwDisplayLink
+    [_wwDisplayLink invalidate];
+    
     if (self.rHintType == HGRecordingHintTypeRecordingBar) {
         // 条形
         self.volumeLayer.mask = [self volumeBarMask];
@@ -168,6 +189,9 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
     } else if (self.rHintType == HGRecordingHintTypeRecordingWaterBorder) {
         // 带边框的水柱
         self.volumeBorderFillLayer.path = [self volumeBorderFillLayerPath].CGPath;
+    } else if (self.rHintType == HGRecordingHintTypeRecordingWaterWave) {
+        // 调用这个方法之后, 就会自动的绘制了
+        [self.wwDisplayLink startWithVolume:self.volume];
     }
 }
 
@@ -333,7 +357,7 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
         return;
     }
     
-    BOOL waterBorder = (self.rHintType == HGRecordingHintTypeRecordingWaterBorder);
+    BOOL waterBorder = (self.rHintType == HGRecordingHintTypeRecordingWaterBorder) || (self.rHintType == HGRecordingHintTypeRecordingWaterWave);
     
     self.volumeSuperLayer.hidden = waterBorder;
     self.borderSuperLayer.hidden = !waterBorder;
@@ -463,11 +487,6 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
     [bezierPath moveToPoint:CGPointMake(lineWidth*0.5, k_VOLUME_HEIGHT-margin)];
     [bezierPath addLineToPoint:CGPointMake(lineWidth*0.5, margin)];
     
-    
-    // 音量强度调控 保证在[1, 10]之间
-    CGFloat volume = MAX(0.05, self.volume);
-    volume = MIN(1.0, volume);
-    
     // layer
     CAShapeLayer* shapLayer = [CAShapeLayer layer];
     // 样式设置
@@ -477,7 +496,7 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
     // 线
     shapLayer.path = bezierPath.CGPath;
     
-    shapLayer.strokeEnd = volume;
+    shapLayer.strokeEnd = self.volume;
     // 返回
     return shapLayer;
 }
@@ -597,11 +616,8 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
 
 /** 带边框水柱的 path */
 - (UIBezierPath*)volumeBorderFillLayerPath {
-    // 让 volume 的值在 [0.05, 1.0] 区间
-    CGFloat volume = MAX(0.05, self.volume);
-    volume = MIN(1.0, volume);
-    
-    CGFloat y = volume*k_VOLUME_HEIGHT;
+    // 尺寸
+    CGFloat y =  self.volume*k_VOLUME_HEIGHT;
     CGRect rect = CGRectMake(0, k_VOLUME_HEIGHT-y, k_VOLUME_WIDTH, k_VOLUME_HEIGHT);
     // 长方形
     return [UIBezierPath bezierPathWithRect:rect];
@@ -614,6 +630,14 @@ static CGFloat const k_VOLUME_HEIGHT = 70.0;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
     }];
+}
+
+- (void)dealloc {
+    
+    // 在这里调用这个方法之后, 就可以不用担心 _wwDisplayLink 被指针循环了. 但是这种用法是错误的
+    // 正确的用法,请参考:https://www.jianshu.com/p/f775b008532a
+    
+//    [_wwDisplayLink invalidate];
 }
 
 @end

@@ -15,6 +15,7 @@
 		5103A668207519D400E76FEF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5103A664207519D400E76FEF /* LaunchScreen.storyboard */; };
 		5103A669207519D400E76FEF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5103A666207519D400E76FEF /* Main.storyboard */; };
 		5103A66E20751B5C00E76FEF /* HGRecordingHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5103A66D20751B5C00E76FEF /* HGRecordingHintView.m */; };
+		510D5D132075DC3800A87ED6 /* HGWaterWaveDisplayLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 510D5D122075DC3800A87ED6 /* HGWaterWaveDisplayLink.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,8 @@
 		5103A667207519D400E76FEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5103A66C20751B5C00E76FEF /* HGRecordingHintView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HGRecordingHintView.h; sourceTree = "<group>"; };
 		5103A66D20751B5C00E76FEF /* HGRecordingHintView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HGRecordingHintView.m; sourceTree = "<group>"; };
+		510D5D112075DC3800A87ED6 /* HGWaterWaveDisplayLink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HGWaterWaveDisplayLink.h; sourceTree = "<group>"; };
+		510D5D122075DC3800A87ED6 /* HGWaterWaveDisplayLink.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HGWaterWaveDisplayLink.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +100,8 @@
 			children = (
 				5103A66C20751B5C00E76FEF /* HGRecordingHintView.h */,
 				5103A66D20751B5C00E76FEF /* HGRecordingHintView.m */,
+				510D5D112075DC3800A87ED6 /* HGWaterWaveDisplayLink.h */,
+				510D5D122075DC3800A87ED6 /* HGWaterWaveDisplayLink.m */,
 			);
 			path = RecordingHintView;
 			sourceTree = "<group>";
@@ -173,6 +178,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				510D5D132075DC3800A87ED6 /* HGWaterWaveDisplayLink.m in Sources */,
 				5103A64C2075186200E76FEF /* HGController.m in Sources */,
 				5103A662207519C900E76FEF /* main.m in Sources */,
 				5103A66E20751B5C00E76FEF /* HGRecordingHintView.m in Sources */,

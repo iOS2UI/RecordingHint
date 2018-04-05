@@ -16,6 +16,8 @@ typedef NS_ENUM(NSInteger, HGRecordingHintType) {
     HGRecordingHintTypeRecordingFlat,
     /** 正在录音 带边框的水柱的样式 */
     HGRecordingHintTypeRecordingWaterBorder,
+    /** 正在录音 带边框的水波样式 */
+    HGRecordingHintTypeRecordingWaterWave,
     /** 即将取消录音 */
     HGRecordingHintTypeWillCancel,
     /** 取消录音 */
